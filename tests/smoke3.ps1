@@ -1,4 +1,11 @@
 # Birthday Surprise — phases 3-6 smoke test (v2)
+# Usage: set $adminUser / $adminPass to the credentials of an admin account
+# you created with the installer (or via phpMyAdmin). No default values —
+# the app itself ships without any built-in credentials.
+param(
+    [string] $adminUser = $env:BS_SMOKE_USER,
+    [string] $adminPass = $env:BS_SMOKE_PASS
+)
 $ErrorActionPreference = 'Continue'
 $base = 'http://localhost/birthday-surprise'
 $php  = 'C:\xampp\php\php.exe'
@@ -15,11 +22,16 @@ function Show($label, $ok, $extra = '') {
     Write-Output ("[{0}] {1} {2}" -f $mark, $label, $extra)
 }
 
+if ([string]::IsNullOrWhiteSpace($adminUser) -or [string]::IsNullOrWhiteSpace($adminPass)) {
+    Write-Output 'SKIP — set BS_SMOKE_USER / BS_SMOKE_PASS env vars with an admin account first.'
+    exit 0
+}
+
 # ---------- 1. admin login ----------
 $r = Invoke-WebRequest "$base/admin/login" -SessionVariable admin -UseBasicParsing
 $tok = Get-Token $r.Content
 Show 'login page loads' ($null -ne $tok)
-Invoke-WebRequest "$base/admin/login" -WebSession $admin -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method Post -Body @{ username='admin'; password='admin123'; _token=$tok } | Out-Null
+Invoke-WebRequest "$base/admin/login" -WebSession $admin -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method Post -Body @{ username=$adminUser; password=$adminPass; _token=$tok } | Out-Null
 $page = Invoke-WebRequest "$base/admin" -WebSession $admin -UseBasicParsing
 Show 'admin session works' ($page.Content -match 'Welcome,')
 
