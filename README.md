@@ -4,6 +4,13 @@ A multi-profile, password-protected, animated birthday story with funny cats —
 plus a full admin panel. Built on the agreed stack: HTML5, CSS3, vanilla JS,
 PHP 8+, PDO, MySQL/MariaDB, GSAP, SweetAlert2, canvas-confetti.
 
+**✨ See it in motion (no setup needed):**
+[https://muhdfhdkhan.github.io/birthday-surprise/](https://muhdfhdkhan.github.io/birthday-surprise/)
+— a static visualization of the full visitor journey: password gate →
+confetti welcome → candle blow → polaroid memories → self-typing letter →
+gift + finale. *(Static preview only — the real app needs PHP + MariaDB, run
+it locally with the steps below.)*
+
 > **Status (Phases 1–6 complete)**: admin auth + dashboard, password gate /
 > birthday-window access control, full animated visitor story (welcome →
 > apologies → candle reveal → memories → letter → gift/complaint replies →
@@ -38,6 +45,7 @@ Birthday/
 ├── config/                 app.php (live) + app.example.php
 ├── cron/                   cleanup.php (rate-limit pruning)
 ├── database/               schema.sql (17 tables) + seed.sql + migrations.sql
+├── docs/                   GitHub Pages visualization (static teaser site)
 ├── public/                 Front controller (index.php), assets, uploads
 ├── routes/                 web.php (full route table)
 ├── storage/                logs, private-uploads, backups (web-denied)
