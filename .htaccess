@@ -1,0 +1,9 @@
+# Birthday Surprise — project root hardening.
+# The web entry point is /public only; deny everything else
+# (front controller, config, database dumps, storage, docs, source files).
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Allow only paths that start with public/ — the deployable docroot.
+    RewriteRule ^(?!public(?:/|$)).* - [F,L]
+</IfModule>

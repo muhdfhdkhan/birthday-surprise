@@ -1,0 +1,20 @@
+# Birthday Surprise — public docroot
+
+Options -Indexes
+
+# Everything that is not a real file/folder goes to the front controller.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Real files (css/js/images/uploads) are served directly.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Never serve source, dumps or logs.
+<FilesMatch "\.(sql|md|log|json|ini|env|sh|bak|dist)$">
+    Require all denied
+</FilesMatch>

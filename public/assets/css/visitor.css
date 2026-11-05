@@ -1,0 +1,653 @@
+/* ============================================================
+   Birthday Surprise — visitor pages (Pastel Purr)
+   1. Stage layout  2. Gate  3. Story stages
+   4. Media / replies / finale  5. Lightbox, music pill, mobile
+   ============================================================ */
+
+/* ===================== 1. STAGE LAYOUT ===================== */
+
+.site-bg{
+  min-height:100dvh;
+  background:
+    radial-gradient(60% 50% at 85% 8%, rgba(245,196,81,.20) 0%, transparent 60%),
+    radial-gradient(55% 45% at 10% 90%, rgba(191,243,224,.35) 0%, transparent 60%),
+    linear-gradient(160deg,#FFD6E7 0%,#E8DCFF 50%,#FFF3D6 100%);
+  background-attachment:fixed;
+}
+
+.visit-stage{
+  position:relative; z-index:1;
+  min-height:100dvh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:28px 16px calc(60px + env(safe-area-inset-bottom));
+}
+
+.visit-stage .stage{ display:none }
+.visit-stage .stage.is-active{ display:flex }
+
+.story-card{
+  width:100%; max-width:520px;
+  display:none; flex-direction:column; align-items:center; gap:16px;
+  padding:36px 30px 30px; text-align:center;
+}
+.story-card.is-active{ display:flex; animation:cardIn .5s var(--ease-bounce) both }
+@keyframes cardIn{
+  from{ opacity:0; transform:translateY(26px) scale(.97) }
+  to{ opacity:1; transform:none }
+}
+
+.gate-card{ display:flex; max-width:440px }
+.visit-foot{
+  position:fixed; bottom:10px; left:0; right:0; z-index:2;
+  text-align:center; font-size:12.5px; color:var(--ink-soft);
+  pointer-events:none;
+}
+
+.divider{
+  display:flex; align-items:center; gap:12px; width:100%;
+  color:var(--ink-soft); font-size:13px; margin:6px 0;
+}
+.divider::before, .divider::after{ content:""; flex:1; height:1px; background:rgba(205,184,255,.5) }
+
+.privacy-line{
+  font-size:12px; color:var(--ink-soft); opacity:.85;
+  display:flex; align-items:center; gap:6px; margin:4px 0 0;
+}
+
+/* Countdown tiles (gate + peek banner) */
+.count-tiles{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
+.ct{
+  min-width:64px; padding:10px 8px; border-radius:16px;
+  background:rgba(255,255,255,.75); border:1.4px solid var(--lavender);
+  display:flex; flex-direction:column; gap:2px;
+}
+.ct b{ font-family:var(--font-display); font-size:26px; color:var(--grape); line-height:1 }
+.ct span{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft) }
+
+.peek-banner{
+  position:fixed; top:0; left:0; right:0; z-index:30;
+  display:flex; gap:6px; align-items:center; justify-content:center;
+  padding:8px 10px; font-size:13.5px; font-weight:600;
+  background:linear-gradient(135deg,#6B4EE6,#FF6FA5); color:#fff;
+  box-shadow:0 4px 16px rgba(107,78,230,.3);
+}
+.peek-banner b{ font-family:ui-monospace,Consolas,monospace }
+
+.gate-note{ color:var(--ink-soft); font-size:14px }
+.muted{ color:var(--ink-soft); font-size:12.5px }
+.empty-inline{ color:var(--ink-soft); font-size:14px; margin:4px 0 }
+
+/* ===================== 2. GATE ===================== */
+
+.cat-face{
+  font-size:64px; line-height:1;
+  filter:drop-shadow(0 6px 12px rgba(107,78,230,.25));
+}
+.cat-idle{ animation:catIdle 3.4s ease-in-out infinite }
+.cat-bounce{ animation:catBounce 1s var(--ease-bounce) infinite }
+.cat-love{ animation:catLove 1.8s ease-in-out infinite }
+@keyframes catIdle{
+  0%,100%{ transform:translateY(0) rotate(0) }
+  50%{ transform:translateY(-8px) rotate(-3deg) }
+}
+@keyframes catBounce{
+  0%,100%{ transform:translateY(0) }
+  35%{ transform:translateY(-14px) rotate(6deg) }
+  70%{ transform:translateY(-4px) rotate(-6deg) }
+}
+@keyframes catLove{
+  0%,100%{ transform:scale(1) }
+  40%{ transform:scale(1.12) rotate(-4deg) }
+}
+
+.gate-title{ font-size:26px; font-weight:700; margin-top:2px }
+.gate-sub{ color:var(--ink-soft); font-size:15px; margin:0 }
+.gate-form{ display:flex; flex-direction:column; gap:4px; width:100%; text-align:left }
+.gate-form .field{ margin-bottom:10px }
+
+.tiny-form{ flex-direction:row; gap:8px; align-items:center }
+.tiny-form input{ min-height:44px }
+.code-inline{ min-height:44px; padding:0 14px; border:1.6px dashed var(--lavender); border-radius:var(--r-input); background:#fff; font-size:15px; letter-spacing:.04em }
+
+/* ===================== 3. STORY STAGES ===================== */
+
+.display-title{
+  font-size:30px; font-weight:700;
+  background:linear-gradient(135deg,var(--rose-deep),var(--grape));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.script-name{ font-family:"Pacifico",cursive; font-size:26px; color:var(--grape); margin:0 }
+.lead{ font-size:16.5px; margin:0; color:var(--ink) }
+.counter{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin:0 }
+
+.plate-card{
+  width:100%; padding:22px 20px; border-radius:var(--r-card);
+  background:linear-gradient(135deg,rgba(255,214,231,.55),rgba(232,220,255,.55));
+  border:1.6px dashed var(--rose);
+}
+.plate-text{ font-size:17px; margin:0; white-space:pre-line }
+
+.dual-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100% }
+.angry-note{
+  margin:0; font-size:14px; color:var(--grape);
+  background:rgba(232,220,255,.6); border-radius:14px; padding:10px 14px;
+}
+
+/* reveal stage */
+.gold-title{
+  font-size:clamp(34px,9vw,54px); font-weight:700; letter-spacing:.04em;
+  background:linear-gradient(120deg,#E9B93B,#F5C451 40%,#FFE9A8 60%,#E9B93B);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:goldShimmer 3.2s linear infinite;
+  text-shadow:0 2px 0 rgba(229,72,127,.08);
+}
+@keyframes goldShimmer{ to{ background-position:-200% 0 } }
+
+.cake{ cursor:pointer; position:relative; user-select:none; animation:cakeBreathe 2.6s ease-in-out infinite }
+@keyframes cakeBreathe{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.04) } }
+.cake-img{ font-size:110px; filter:drop-shadow(0 12px 22px rgba(229,72,127,.25)) }
+.candle-hint{
+  position:relative; display:inline-block; padding:6px 12px; margin-top:6px;
+  border-radius:var(--r-pill); background:rgba(255,255,255,.8);
+  font-size:13.5px; color:var(--ink-soft);
+}
+.cake.is-blown .cake-img{ animation:cakePop .5s var(--ease-bounce) }
+.cake.is-blown .candle-hint{ color:var(--rose-deep) }
+@keyframes cakePop{ 0%{ transform:scale(1) } 40%{ transform:scale(1.25) rotate(-4deg) } 100%{ transform:scale(1) } }
+
+/* letter stage */
+.letter-paper{
+  width:100%; padding:26px 22px;
+  background:linear-gradient(#FFFBEF,#FFF8F3);
+  border:1.4px solid var(--butter); border-radius:18px;
+  box-shadow:inset 0 0 40px rgba(245,196,81,.12);
+}
+.letter-text{
+  text-align:left; min-height:120px; font-size:17px; line-height:1.75;
+  font-family:"Caveat",cursive; font-size:22px; color:var(--ink);
+}
+.letter-text.typing::after{
+  content:"▌"; margin-left:2px; color:var(--rose);
+  animation:caretBlink .9s step-end infinite;
+}
+@keyframes caretBlink{ 50%{ opacity:0 } }
+
+.btn-ghost{
+  background:none; border:0; color:var(--ink-soft); font:inherit;
+  font-size:13.5px; cursor:pointer; text-decoration:underline;
+}
+.btn-ghost:hover{ color:var(--rose-deep) }
+
+/* wishes */
+.wish-stack{ display:flex; flex-direction:column; gap:10px; width:100% }
+.wish-card{
+  display:flex; align-items:flex-start; gap:10px; text-align:left;
+  background:rgba(255,255,255,.8); border:1.4px solid var(--bubble, var(--blush));
+  border-radius:16px; padding:12px 14px;
+  animation:wishIn .5s var(--ease-bounce) both;
+}
+.wish-card:nth-child(2n){ border-color:var(--lavender) }
+.wish-card:nth-child(3n){ border-color:var(--mint) }
+.wish-card span{ font-size:24px }
+.wish-card p{ margin:2px 0 0; font-size:15px }
+@keyframes wishIn{ from{ opacity:0; transform:translateX(-14px) } to{ opacity:1; transform:none } }
+
+/* secret box */
+.secret-box{
+  position:relative; width:100%; padding:24px 20px 18px;
+  border-radius:var(--r-card);
+  background:linear-gradient(135deg,#E8DCFF,#FFD6E7);
+  border:1.6px solid var(--grape);
+  animation:secretPop .6s var(--ease-bounce) both;
+}
+@keyframes secretPop{ from{ opacity:0; transform:scale(.86) rotate(-2deg) } to{ opacity:1; transform:none } }
+.wax-seal{
+  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+  width:36px; height:36px; display:grid; place-items:center;
+  background:radial-gradient(circle at 30% 30%,#FF8FB8,#E5487F);
+  border-radius:50%; color:#fff; font-size:16px;
+  box-shadow:0 4px 10px rgba(229,72,127,.4);
+}
+
+/* ===================== 4. MEMORIES ===================== */
+
+.polaroid-grid{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:16px; width:100%;
+}
+.polaroid{
+  margin:0; background:#fff; padding:8px 8px 10px; cursor:zoom-in;
+  border-radius:6px; box-shadow:0 4px 14px rgba(58,43,77,.14);
+  transform:rotate(var(--tilt,-1deg));
+  transition:transform .25s var(--ease-bounce), box-shadow .25s;
+}
+.polaroid:nth-child(2n){ --tilt:1.4deg }
+.polaroid:nth-child(3n){ --tilt:-0.6deg }
+.polaroid:hover, .polaroid:focus-visible{
+  transform:rotate(0) translateY(-4px) scale(1.04);
+  box-shadow:0 10px 24px rgba(58,43,77,.2);
+  outline:none;
+}
+.polaroid img{
+  display:block; width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px;
+  background:rgba(232,220,255,.4);
+}
+.taken-on{ font-family:"Caveat",cursive; font-size:15px; color:var(--ink-soft); padding-top:6px; text-align:center }
+
+/* ===================== 5. REPLIES / FINALE ===================== */
+
+.reply-box{
+  width:100%; display:flex; flex-direction:column; gap:10px; text-align:left;
+  background:rgba(255,255,255,.7); padding:18px; border-radius:var(--r-card);
+  border:1.4px solid var(--lavender);
+}
+.reply-title{ display:flex; align-items:center; gap:8px; font-size:16px; margin:0 }
+.reply-title i{ color:var(--rose) }
+.reply-box textarea{
+  width:100%; padding:12px 14px; border:1.6px solid var(--lavender);
+  border-radius:var(--r-input); font:inherit; font-size:16px; resize:vertical;
+  background:#fff; color:var(--ink);
+}
+.reply-box textarea:focus{ outline:none; border-color:var(--rose) }
+.reply-note{
+  margin:0; font-size:13.5px; color:#1F7A52;
+  background:rgba(191,243,224,.7); padding:8px 12px; border-radius:12px;
+}
+.finale-lock{ color:#8A5A00; background:rgba(255,224,168,.75); text-align:center }
+.btn-next[disabled]{ opacity:.55; filter:grayscale(.4); cursor:not-allowed }
+.btn-next[disabled]:hover{ transform:none }
+
+.chip-row{ display:flex; flex-wrap:wrap; gap:8px }
+.chip{
+  padding:8px 14px; border-radius:var(--r-pill);
+  background:#fff; border:1.6px solid var(--lavender);
+  font-family:var(--font-display); font-weight:600; font-size:13.5px;
+  color:var(--grape); cursor:pointer;
+  transition:transform .18s var(--ease-bounce), background .2s, border-color .2s;
+}
+.chip:hover{ transform:translateY(-2px); background:var(--blush) }
+.chip.is-on{ background:linear-gradient(135deg,#FF6FA5,#FF8FB8); border-color:transparent; color:#fff }
+
+.hp-field{ position:absolute; left:-6000px; opacity:0; height:0; width:0 }
+
+.final-script{ font-family:"Caveat",cursive; font-size:26px; margin:0 }
+.post-note{ margin:0; color:var(--ink-soft); font-size:14.5px }
+.small-note{ margin:0; font-size:12.5px; color:var(--ink-soft) }
+
+.reaction-row{ display:flex; gap:12px }
+.reaction{
+  width:58px; height:58px; display:grid; place-items:center;
+  font-size:26px; border-radius:20px;
+  background:rgba(255,255,255,.85); border:1.6px solid var(--lavender);
+  cursor:pointer; transition:transform .2s var(--ease-bounce), box-shadow .2s;
+}
+.reaction:hover{ transform:translateY(-4px) scale(1.12); box-shadow:0 8px 18px rgba(107,78,230,.25) }
+.reaction.is-picked{
+  background:linear-gradient(135deg,#FF6FA5,#FF8FB8);
+  border-color:transparent;
+}
+
+/* ===================== 5b. LIGHTBOX / MUSIC PILL ===================== */
+
+.lightbox{
+  position:fixed; inset:0; z-index:60;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:20px;
+  background:rgba(30,22,51,.82); backdrop-filter:blur(6px);
+}
+.lightbox[hidden]{ display:none }
+.lightbox img{
+  max-width:min(92vw,900px); max-height:74vh;
+  border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:cardIn .35s var(--ease-bounce) both;
+}
+.lb-caption{ color:#fff; font-size:15px; text-align:center; max-width:520px }
+.lb-close{
+  position:absolute; top:14px; right:14px;
+  width:44px; height:44px; border-radius:50%; border:0;
+  background:rgba(255,255,255,.14); color:#fff; font-size:22px; cursor:pointer;
+}
+.lb-close:hover{ background:rgba(255,255,255,.28) }
+
+.music-pill{
+  position:fixed; right:14px; bottom:calc(40px + env(safe-area-inset-bottom));
+  z-index:50; display:flex;
+}
+.music-pill button{
+  width:52px; height:52px; border-radius:50%; border:0; cursor:pointer;
+  background:linear-gradient(135deg,#FF6FA5,#6B4EE6); color:#fff; font-size:18px;
+  box-shadow:0 8px 22px rgba(107,78,230,.4);
+  transition:transform .2s var(--ease-bounce);
+}
+.music-pill button:hover{ transform:scale(1.08) }
+.music-pill button.is-playing i.fa-play::before{ content:"\f04c" }
+.music-pill button.is-playing{ animation:pulseBeat 1.6s ease-in-out infinite }
+@keyframes pulseBeat{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.09) } }
+.mini-audio{ width:180px; height:34px }
+
+/* wiggle used by the angry button */
+.wiggle{ animation:wiggleShake .45s ease-in-out }
+@keyframes wiggleShake{
+  0%,100%{ transform:translateX(0) }
+  20%{ transform:translateX(-9px) } 40%{ transform:translateX(8px) }
+  60%{ transform:translateX(-6px) } 80%{ transform:translateX(4px) }
+}
+
+/* ============================================================
+   PROPER SORRY CAT — pure-CSS ginger Tabby with feelings
+   States:  data-sad="0..3" (escalates per "still angry" click)
+            .is-flop  (surrender dramatics, added at sad level 3)
+            .is-forgiven   (happy pounce + hearts)
+   ============================================================ */
+.sorry-cat{
+  width:170px; height:190px; margin:0 auto 4px; position:relative;
+  transition:transform .3s ease;
+}
+.sc-inner{ position:absolute; inset:0; transition:transform .55s var(--ease-bounce); isolation:isolate }
+.sc-head,.sc-body,.sc-eye,.sc-muzzle,.sc-tail,.sc-paw,.sc-ear,.sc-blush,.sc-puddle,.sc-sign{
+  position:absolute;
+}
+.sc-inner::after{ /* soft shadow on the floor */
+  content:""; position:absolute; bottom:-6px; left:50%; margin-left:-42px;
+  width:84px; height:12px; border-radius:50%;
+  background:rgba(107,78,230,.16);
+  animation:scShadow 3.2s ease-in-out infinite;
+}
+@keyframes scShadow{
+  0%,100%{ transform:scaleX(1); opacity:.9 }
+  50%{ transform:scaleX(.86); opacity:.7 }
+}
+
+/* — head — */
+.sc-head{
+  top:24px; left:50%; margin-left:-47px; width:94px; height:82px;
+  background:#FFB86B; border-radius:20px 20px 24px 24px;
+  box-shadow:inset -10px -10px 0 rgba(229,72,127,.08);
+  animation:scSway 3.2s ease-in-out infinite;
+  transform-origin:50% 100%;
+}
+@keyframes scSway{ 0%,100%{ transform:rotate(0deg) } 50%{ transform:rotate(-4deg) } }
+
+/* — ears — */
+.sc-ear{
+  top:8px; width:30px; height:32px; background:#FFB86B;
+  clip-path:polygon(50% 0,0 100%,100% 100%);
+  z-index:1; transition:transform .45s var(--ease-bounce);
+  transform-origin:50% 85%;
+}
+.sc-ear::after{ /* pink inner ear (same stacking context — always visible) */
+  content:""; position:absolute; left:50%; bottom:2px; margin-left:-6px;
+  width:12px; height:12px; background:#FF9EC3;
+  clip-path:polygon(50% 0,0 100%,100% 100%);
+}
+.sc-ear.e-l{ left:10px; animation:scEarTwitchL 4.5s ease-in-out infinite }
+.sc-ear.e-r{ right:10px; animation:scEarTwitchR 5.2s ease-in-out infinite }
+.sc-ear-inner{ display:none } /* replaced by .sc-ear::after (stacking quirk) */
+@keyframes scEarTwitchL{ 0%,88%,100%{ transform:rotate(0) } 92%{ transform:rotate(-14deg) } }
+@keyframes scEarTwitchR{ 0%,80%,100%{ transform:rotate(0) } 86%{ transform:rotate(12deg) } }
+
+/* — eyes — */
+.sc-eye{
+  top:28px; width:19px; height:23px;
+  background:#fff; border:2.6px solid var(--night);
+  border-radius:50% 50% 48% 48%; overflow:hidden; z-index:3;
+}
+.sc-eye::before{ /* pupil */
+  content:""; position:absolute; left:50%; top:52%; margin:-5px 0 0 -5px;
+  width:10px; height:10px; background:var(--night); border-radius:50%;
+  animation:scPupilWobble 2.6s ease-in-out infinite;
+}
+@keyframes scPupilWobble{
+  0%,100%{ transform:translate(0,1px) }
+  30%{ transform:translate(-1.4px,0) }
+  70%{ transform:translate(1.4px,2px) }
+}
+.sc-eye.e-l{ left:17px } .sc-eye.e-r{ right:17px }
+.sc-lid{ /* blinking eyelid */
+  position:absolute; inset:0; background:#FFB86B;
+  transform:scaleY(0); transform-origin:top;
+  animation:scBlink 4.6s infinite;
+}
+.sc-eye.e-r .sc-lid{ animation-delay:3.9s }
+@keyframes scBlink{
+  0%,93%,100%{ transform:scaleY(0) }
+  96%,98%{ transform:scaleY(1) }
+}
+
+/* — tears (grow heavier per sad level) — */
+.sc-tear{
+  position:absolute; left:50%; top:70%; width:7px; height:11px;
+  background:linear-gradient(180deg,#9BD4FF,#5FB2F2);
+  border-radius:50% 50% 60% 60%;
+  transform:translateX(-50%) rotate(8deg);
+  opacity:0; z-index:4;
+  animation:scCry 1.7s ease-in infinite;
+}
+.sc-eye.e-r .sc-tear{ animation-delay:.8s; transform:rotate(-8deg) }
+@keyframes scCry{
+  0%{ opacity:0; transform:translateX(-50%) translateY(2px) rotate(8deg) }
+  25%{ opacity:1 }
+  100%{ opacity:0; transform:translateX(-50%) translateY(30px) rotate(8deg) }
+}
+
+/* — muzzle, nose, whiskers — */
+.sc-muzzle{
+  bottom:6px; left:50%; margin-left:-17px; width:34px; height:19px;
+  background:#FFF3E3; border-radius:50%; z-index:4;
+}
+.sc-nose{
+  position:absolute; top:-4px; left:50%; margin-left:-3.5px; width:7px; height:5px;
+  background:#FF8FB7; border-radius:60% 60% 50% 50%;
+}
+.sc-mouth{
+  position:absolute; top:3px; left:50%; margin-left:-5px; box-sizing:border-box;
+  width:10px; height:8px; background:var(--night);
+  border-radius:50% 50% 62% 62%; border:none;
+  transition:.4s;
+  animation:scWail 1.4s ease-in-out infinite;
+}
+@keyframes scWail{
+  0%,100%{ transform:scaleY(1) }
+  50%{ transform:scaleY(1.25) } /* quivering lower lip */
+}
+.sc-whisk{
+  top:2px; width:15px; height:0; border-top:1.8px solid rgba(58,43,77,.5);
+  margin:0; padding:0;
+}
+.sc-whisk.w-l1{ left:-16px; rotate:-8deg } .sc-whisk.w-l2{ left:-14px; top:7px; rotate:6deg }
+.sc-whisk.w-r1{ right:-16px; rotate:8deg } .sc-whisk.w-r2{ right:-14px; top:7px; rotate:-6deg }
+
+/* — blush — */
+.sc-blush{
+  top:44px; width:10px; height:6px; background:rgba(255,143,183,.55);
+  border-radius:50%; z-index:3;
+}
+.sc-blush.b-l{ left:12px } .sc-blush.b-r{ right:12px }
+
+/* — body + begging paws — */
+.sc-body{
+  top:102px; left:50%; margin-left:-34px; width:68px; height:54px;
+  background:#FFB86B; border-radius:24px 24px 18px 18px;
+  box-shadow:inset -8px -6px 0 rgba(229,72,127,.08);
+  animation:scBodyTremble .8s ease-in-out infinite;
+  transform-origin:50% 0;
+}
+@keyframes scBodyTremble{ 0%,100%{ transform:rotate(0) translateX(0) } 25%{ transform:rotate(.8deg) translateX(-.7px) } 75%{ transform:rotate(-.8deg) translateX(.7px) } }
+.sc-paw{
+  top:40px; width:16px; height:13px; background:#FFF3E3;
+  border-radius:8px; box-shadow:0 2px 3px rgba(58,43,77,.12);
+}
+.sc-paw.p-l{ left:8px; animation:scPawBegL 1.6s ease-in-out infinite }
+.sc-paw.p-r{ right:8px; animation:scPawBegR 1.9s ease-in-out infinite }
+@keyframes scPawBegL{ 0%,100%{ transform:translateY(0) rotate(0) } 50%{ transform:translateY(-3px) rotate(-7deg) } }
+@keyframes scPawBegR{ 0%,100%{ transform:translateY(0) rotate(0) } 50%{ transform:translateY(-3px) rotate(7deg) } }
+
+/* — the little placard — */
+.sc-sign{
+  top:12px; left:50%; margin-left:-27px; width:54px; text-align:center;
+  padding:4px 2px; font:700 10px/1.2 var(--font-body); letter-spacing:.06em;
+  color:var(--rose-deep); background:rgba(255,255,255,.92);
+  border:1.6px dashed var(--rose); border-radius:8px;
+  transform:rotate(-6deg); z-index:5;
+  animation:scSignTilt 2.8s ease-in-out infinite;
+  transition:opacity .3s;
+}
+@keyframes scSignTilt{ 0%,100%{ transform:rotate(-6deg) } 50%{ transform:rotate(4deg) } }
+
+/* — tail — */
+.sc-tail{
+  top:132px; left:22px; width:60px; height:11px;
+  background:#FFB86B; border-radius:8px 4px 4px 8px;
+  transform-origin:88% 50%; z-index:-1;
+  animation:scTailSwish 3.4s ease-in-out infinite;
+  transition:transform .5s ease;
+}
+.sc-tail::after{ /* tail tip */
+  content:""; position:absolute; right:-2px; top:-4px;
+  width:13px; height:13px; background:#FFF3E3; border-radius:50%;
+}
+@keyframes scTailSwish{
+  0%,100%{ transform:rotate(-6deg) }
+  50%{ transform:rotate(16deg) }
+}
+
+/* — tear puddle (appears as sadness grows) — */
+.sc-puddle{
+  bottom:-9px; left:50%; margin-left:-26px; width:52px; height:12px;
+  background:linear-gradient(180deg,rgba(159,212,255,.65),rgba(95,178,242,.45));
+  border-radius:50%; opacity:0; transform:scale(.25);
+  transition:opacity .6s, transform .6s;
+}
+
+/* ============ escalating states ============ */
+/* level 1 — proper crying */
+.sorry-cat[data-sad="1"] .sc-mouth{ animation-duration:.9s }
+.sorry-cat[data-sad="1"] .sc-tear{ animation-duration:1.1s }
+.sorry-cat[data-sad="1"] .sc-head{ animation-duration:2.6s }
+/* level 2 — desperate (ears drooping, tail down, puddle) */
+.sorry-cat[data-sad="2"] .sc-ear{ transform:rotate(14deg) }
+.sorry-cat[data-sad="2"] .sc-ear.e-l{ transform:rotate(-14deg) translate(2px,-3px) }
+.sorry-cat[data-sad="2"] .sc-ear.e-r{ transform:rotate(14deg) translate(-2px,-3px) }
+.sorry-cat[data-sad="2"] .sc-ear-inner.e-l{ transform:rotate(-14deg) translate(2px,-3px) }
+.sorry-cat[data-sad="2"] .sc-ear-inner.e-r{ transform:rotate(14deg) translate(-2px,-3px) }
+.sorry-cat[data-sad="2"] .sc-tail{ animation-duration:4.6s; transform:rotate(20deg) translateY(6px) }
+.sorry-cat[data-sad="2"] .sc-puddle{ opacity:1; transform:scale(.55) }
+.sorry-cat[data-sad="2"] .sc-tear{ animation-duration:.85s }
+.sorry-cat[data-sad="2"] .sc-head{ animation-duration:2.2s }
+/* level 3 — full breakdown */
+.sorry-cat[data-sad="3"] .sc-ear.e-l{ transform:rotate(-26deg) translate(3px,-2px) }
+.sorry-cat[data-sad="3"] .sc-ear.e-r{ transform:rotate(26deg) translate(-3px,-2px) }
+.sorry-cat[data-sad="3"] .sc-ear-inner.e-l{ transform:rotate(-26deg) translate(3px,-2px) }
+.sorry-cat[data-sad="3"] .sc-ear-inner.e-r{ transform:rotate(26deg) translate(-3px,-2px) }
+.sorry-cat[data-sad="3"] .sc-tail{ animation:none; transform:rotate(38deg) translateY(9px) }
+.sorry-cat[data-sad="3"] .sc-puddle{ opacity:1; transform:scale(1) }
+.sorry-cat[data-sad="3"] .sc-tear{ animation-duration:.6s }
+.sorry-cat[data-sad="3"] .sc-sign{ text-decoration:line-through; text-decoration-thickness:2px }
+
+/* the dramatic flop — "okay the cat is lying flat on the floor now" */
+.sorry-cat.is-flop{ transform:translateY(16px) }
+.sorry-cat.is-flop .sc-inner{
+  transform:rotate(74deg) translate(9px,16px);
+  transform-origin:52% 88%;
+}
+.sorry-cat.is-flop .sc-lid{ transform:scaleY(1) !important; animation:none !important } /* eyes shut */
+.sorry-cat.is-flop .sc-tear{ opacity:0 !important; animation:none !important }
+.sorry-cat.is-flop .sc-puddle{ opacity:0 !important }
+.sorry-cat.is-flop::before{ /* flat puddle on the floor (outside the rotated body) */
+  content:""; position:absolute; top:100%; left:6%; width:98px; height:16px;
+  background:linear-gradient(180deg,rgba(159,212,255,.75),rgba(95,178,242,.5));
+  border-radius:50%;
+}
+.sorry-cat.is-flop .sc-inner::after{ display:none } /* parent is rotated — hide flat shadow */
+.sorry-cat.is-flop .sc-tail{ animation:none !important; transform:rotate(34deg) !important }
+.sorry-cat.is-flop .sc-sign{ opacity:0 }
+.sorry-cat.is-flop .sc-body{ animation:scFlopSigh 2.6s ease-in-out infinite }
+@keyframes scFlopSigh{
+  0%,100%{ box-shadow:inset -8px -6px 0 rgba(229,72,127,.08) }
+  50%{ box-shadow:inset -8px -12px 0 rgba(229,72,127,.12) }
+}
+
+/* forgiven — happy pounce, ears up, smile, hearts */
+.sorry-cat.is-forgiven{ animation:scHappyPounce .9s var(--ease-bounce) }
+.sorry-cat.is-forgiven .sc-inner{ transform:rotate(0) translateY(-6px) }
+@keyframes scHappyPounce{
+  0%{ transform:translateY(0) rotate(0) }
+  30%{ transform:translateY(-22px) rotate(-7deg) }
+  55%{ transform:translateY(0) }
+  75%{ transform:translateY(-9px) rotate(5deg) }
+}
+.sorry-cat.is-forgiven .sc-ear.e-l{ transform:rotate(0) !important }
+.sorry-cat.is-forgiven .sc-ear.e-r{ transform:rotate(0) !important }
+.sorry-cat.is-forgiven .sc-ear-inner.e-l{ transform:rotate(0) !important }
+.sorry-cat.is-forgiven .sc-ear-inner.e-r{ transform:rotate(0) !important }
+.sorry-cat.is-forgiven .sc-tear{ opacity:0 !important; animation:none !important }
+.sorry-cat.is-forgiven .sc-puddle{ opacity:1; transform:scale(1.25) !important;
+  background:linear-gradient(180deg,rgba(255,196,222,.8),rgba(255,143,183,.5)) }
+.sorry-cat.is-forgiven .sc-mouth{
+  background:transparent;
+  border:none; border-bottom:2.4px solid var(--night);
+  border-radius:0 0 14px 14px; animation:none; top:1px;
+  width:14px; margin-left:-7px; height:8px;
+}
+.sorry-cat.is-forgiven .sc-sign{ background:#FFE9E1; color:var(--rose-deep); border-color:#FF9EC3 }
+.sorry-cat.is-forgiven .sc-sign::after{ content:"…accepted! 💖"; display:block; font-size:8.5px; letter-spacing:0 }
+.sorry-cat.is-forgiven .sc-body{ animation:none }
+.sorry-cat.is-forgiven .sc-paw.p-l{ animation:none; transform:translateY(-6px) rotate(-18deg) }
+.sorry-cat.is-forgiven .sc-paw.p-r{ animation:none; transform:translateY(-6px) rotate(18deg) }
+.sorry-cat.is-forgiven .sc-tail{ animation:scTailZoom .5s ease-in-out infinite }
+@keyframes scTailZoom{ 0%,100%{ transform:rotate(-14deg) } 50%{ transform:rotate(24deg) } }
+
+/* floating forgiveness hearts */
+.sc-heart{
+  top:-6px; left:50%; font-size:15px; position:absolute;
+  opacity:0; transform:translateY(6px) scale(.4); z-index:6;
+}
+.sc-heart.h1{ margin-left:-26px } .sc-heart.h2{ margin-left:14px; top:2px } .sc-heart.h3{ margin-left:-2px; top:-14px; font-size:18px }
+.sorry-cat.is-forgiven .sc-heart{ animation:scHeartPop 1.6s ease-out infinite }
+.sorry-cat.is-forgiven .sc-heart.h2{ animation-delay:.28s }
+.sorry-cat.is-forgiven .sc-heart.h3{ animation-delay:.55s }
+@keyframes scHeartPop{
+  0%{ opacity:0; transform:translateY(10px) scale(.4) rotate(0) }
+  25%{ opacity:1; transform:translateY(-2px) scale(1.1) rotate(-8deg) }
+  70%{ opacity:.9; transform:translateY(-20px) scale(1) rotate(6deg) }
+  100%{ opacity:0; transform:translateY(-34px) scale(.7) rotate(0) }
+}
+
+/* mobile + reduced motion for the sorry cat */
+@media (max-width:480px){
+  .sorry-cat{ transform:scale(.86); margin-bottom:-6px }
+  .sorry-cat.is-forgiven{ transform:scale(.86) }
+}
+@media (prefers-reduced-motion:reduce){
+  .sorry-cat .sc-inner, .sorry-cat .sc-head, .sorry-cat .sc-ear.e-l, .sorry-cat .sc-ear.e-r,
+  .sorry-cat .sc-body, .sorry-cat .sc-tail, .sorry-cat .sc-sign,
+  .sorry-cat .sc-paw.p-l, .sorry-cat .sc-paw.p-r,
+  .sorry-cat.is-forgiven .sc-heart,
+  .sorry-cat.is-forgiven .sc-tail{ animation:none !important }
+  .sorry-cat .sc-lid{ animation-duration:8s !important }
+  .sorry-cat .sc-inner, .sorry-cat .sc-ear, .sorry-cat .sc-ear-inner,
+  .sorry-cat .sc-tail, .sorry-cat .sc-sign{ transition:none }
+}
+
+/* ===================== 6. MOBILE ===================== */
+
+@media (max-width:480px){
+  .story-card, .gate-card{ padding:26px 18px 22px }
+  .display-title{ font-size:25px }
+  .gate-title{ font-size:22px }
+  .cake-img{ font-size:88px }
+  .polaroid-grid{ gap:10px }
+  .tiny-form{ flex-wrap:wrap }
+  .tiny-form .code-inline{ flex:1; min-width:0 }
+  .dual-actions{ flex-direction:stretch }
+  .dual-actions > *{ flex:1; min-width:130px }
+  .ct{ min-width:56px }
+  .ct b{ font-size:21px }
+  .reaction{ width:52px; height:52px; font-size:22px }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cat-idle, .cat-bounce, .cat-love, .floater, .cake, .gold-title,
+  .music-pill button.is-playing{ animation:none }
+  .story-card.is-active{ animation:none }
+}

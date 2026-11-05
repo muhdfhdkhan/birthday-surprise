@@ -1,0 +1,2 @@
+# Nothing in /storage may be served by the web server.
+Require all denied
